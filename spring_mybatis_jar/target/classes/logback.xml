@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--scan:配置文件如果发生改变,将会被重新加载,scanPeriod:设置监测配置文件是否有修改的时间间隔 -->
+<configuration scan="true" scanPeriod="60 seconds">
+	<!-- 设置日志文件输出目录 -->
+	<property name="LOG_PATH" value="../../logs/goods" />
+	<!-- 输出到控制台 -->
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+		</encoder>
+	</appender>
+	<!-- 核心系统日志输出到文件，基于日志大小和时间归档 -->
+	<appender name="rollingFile"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!--按每天归档yyyy-MM-dd/maxFileSize:控制单个文件最大值/maxHistory:日志保留天数 -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- ${LOG_PATH}/hrt-platform.%d{yyyy-MM-dd.HH}.log -->
+			<fileNamePattern>${LOG_PATH}/hrt-goods.%d{yyyy-MM-dd.HH}.%i.log
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!-- maxFileSize:控制单个文件最大值 -->
+				<maxFileSize>50MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<!-- maxHistory:最多保留30天的日志文件 -->
+			<maxHistory>100</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!--全局日志输出级别 -->
+	<root level="INFO">
+		<appender-ref ref="stdout" />
+		<appender-ref ref="rollingFile" />
+	</root>
+</configuration>
